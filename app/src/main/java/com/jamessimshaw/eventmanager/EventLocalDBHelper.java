@@ -13,11 +13,11 @@ public class EventLocalDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "events.db";
     private static final int DB_VERSION = 1;
 
-    private static final String TABLE_EVENTS = "events";
-    private static final String COLUMN_TITLE = "title";
-    private static final String COLUMN_DATE = "date";
-    private static final String COLUMN_LOCATION = "location";
-    private static final String COLUMN_COMMENTS = "comments";
+    public static final String TABLE_EVENTS = "events";
+    public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_LOCATION = "location";
+    public static final String COLUMN_COMMENTS = "comments";
 
     private static final String DB_CREATE = "create table " +
             TABLE_EVENTS + " (" + BaseColumns._ID +
