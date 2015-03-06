@@ -1,5 +1,5 @@
 <android.support.v4.widget.DrawerLayout
-    android:id="@+id/mainViewPager"
+    android:id="@+id/mainActivityView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +15,7 @@
     
     <ListView
         android:id="@+id/eventDrawer"
-        android:layout_width="250dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"

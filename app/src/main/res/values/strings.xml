@@ -3,4 +3,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="menu_newEvent">New Event</string>
+    <string-array name="drawer">
+        <item>Today</item>
+        <item>Next 7 Days</item>
+        <item>Next 30 Days</item>
+        <item>All Future Events</item>
+    </string-array>
 </resources>
