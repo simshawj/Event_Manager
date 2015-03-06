@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventTitleEditText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="@string/eventTitleEditTextHint"
+        android:layout_marginTop="15dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventLocationEditText"
+        android:layout_below="@+id/eventTitleEditText"
+        android:layout_alignLeft="@+id/eventTitleEditText"
+        android:layout_alignStart="@+id/eventTitleEditText"
+        android:hint="@string/eventLocationEditTextHint"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/eventDateEditText"
+        android:layout_below="@+id/eventLocationEditText"
+        android:layout_alignLeft="@+id/eventLocationEditText"
+        android:layout_alignStart="@+id/eventLocationEditText"
+        android:hint="@string/eventDateEditTextHint"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/eventCommentsEditText"
+        android:layout_below="@+id/eventDateEditText"
+        android:layout_alignLeft="@+id/eventDateEditText"
+        android:layout_alignStart="@+id/eventDateEditText"
+        android:hint="@string/eventCommentsEditTextHint"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/eventCommentsEditText"
+        android:layout_alignLeft="@+id/eventCommentsEditText"
+        android:layout_alignStart="@+id/eventCommentsEditText"
+        android:paddingTop="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/eventCancelButtonText"
+            android:id="@+id/eventCancelButton"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/eventSaveButtonText"
+            android:id="@+id/eventSaveButton"/>
+    </LinearLayout>
 
 </RelativeLayout>

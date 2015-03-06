@@ -3,6 +3,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="menu_newEvent">New Event</string>
+    <string name="eventTitleEditTextHint">Event Title</string>
+    <string name="eventLocationEditTextHint">Event Location</string>
+    <string name="eventDateEditTextHint">Event Date</string>
+    <string name="eventCommentsEditTextHint">Comments</string>
+    <string name="eventCancelButtonText">Cancel</string>
+    <string name="eventSaveButtonText">Save</string>
     <string-array name="drawer">
         <item>Today</item>
         <item>Next 7 Days</item>
