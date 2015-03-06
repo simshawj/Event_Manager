@@ -1,6 +1,7 @@
 package com.jamessimshaw.eventmanager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -45,6 +46,9 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_new) {
+            Intent intent = new Intent(this, NewEventActivity.class);
+            startActivity(intent);
+
             return true;
         }
 
