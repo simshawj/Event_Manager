@@ -36,7 +36,12 @@ public class NewEventActivity extends Activity {
     private View.OnClickListener mSaveClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            if (isValidInput()) {
+                // Save Event to SQLite database
+            }
+            else {
+                //create Alert Dialog
+            }
         }
     };
 
@@ -46,4 +51,13 @@ public class NewEventActivity extends Activity {
             finish();
         }
     };
+
+    private boolean isValidInput() {
+        if (mTitleEditText.getText().toString().equals(""))
+            return false;
+        if (mLocationEditText.getText().toString().equals(""))
+            return false;
+
+        return true;
+    }
 }
