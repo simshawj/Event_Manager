@@ -2,41 +2,46 @@ package com.jamessimshaw.eventmanager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by James on 3/5/2015.
  */
-public class NewEventActivity extends Activity implements TimePickerDialog.OnTimeSetListener {
+public class NewEventActivity extends Activity{
     private EditText mTitleEditText;
-    private EditText mDateEditText;
     private EditText mLocationEditText;
     private EditText mCommentsEditText;
     private Button mSaveButton;
     private Button mCancelButton;
     private int mEventHour;
     private int mEventMinute;
+    private int mDay;
+    private int mMonth;
+    private int mYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
+
         mEventHour = -1;
         mEventMinute = -1;
-
+        mDay = -1;
+        mMonth = -1;
+        mYear = -1;
 
         mTitleEditText = (EditText) findViewById(R.id.eventTitleEditText);
-        //mDateEditText = (EditText) findViewById(R.id.eventDateEditText);
         mLocationEditText = (EditText) findViewById(R.id.eventLocationEditText);
         mCommentsEditText = (EditText) findViewById(R.id.eventCommentsEditText);
         mSaveButton = (Button) findViewById(R.id.eventSaveButton);
@@ -51,25 +56,47 @@ public class NewEventActivity extends Activity implements TimePickerDialog.OnTim
             return false;
         if (mLocationEditText.getText().toString().equals(""))
             return false;
-        if (mEventMinute < 0 || mEventHour < 0)
+        if (mEventMinute < 0 || mEventHour < 0 || mDay < 0 || mMonth < 0 || mYear < 0)
             return false;
-
         return true;
     }
 
     public void showDatePicker(View view) {
+        Calendar calendar = Calendar.getInstance();
+        int curYear = calendar.get(Calendar.YEAR);
+        int curMonth = calendar.get(Calendar.MONTH);
+        int curDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mDay = dayOfMonth;
+                mMonth = monthOfYear;
+                mYear = year;
+            }
+        }, curYear, curMonth, curDay);
+        datePickerDialog.setMessage(getString(R.string.eventDatePickerMessage));
+        datePickerDialog.show();
 
     }
 
     public void showTimePicker(View view) {
-        DialogFragment dialogFragment = new TimePickerFragment();
-        dialogFragment.show(getFragmentManager(), "timePicker");
-    }
+        final Calendar calendar = Calendar.getInstance();
 
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        mEventHour = hourOfDay;
-        mEventMinute = minute;
+        int curHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int curMinute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                mEventHour = hourOfDay;
+                mEventMinute = minute;
+            }
+        }, curHour, curMinute, DateFormat.is24HourFormat(this));
+        timePickerDialog.setMessage(getString(R.string.eventTimePickerMessage));
+        timePickerDialog.show();
     }
 
     private View.OnClickListener mSaveClickListener = new View.OnClickListener() {
@@ -79,6 +106,9 @@ public class NewEventActivity extends Activity implements TimePickerDialog.OnTim
                 Event event = new Event();
                 event.setTitle(mTitleEditText.getText().toString());
                 event.setLocation(mLocationEditText.getText().toString());
+                event.setComments(mCommentsEditText.getText().toString());
+
+                
 
             }
             else {
@@ -96,17 +126,4 @@ public class NewEventActivity extends Activity implements TimePickerDialog.OnTim
             finish();
         }
     };
-
-    public class TimePickerFragment extends DialogFragment {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar calendar = Calendar.getInstance();
-
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-            return new TimePickerDialog(getActivity(), NewEventActivity.this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-        }
-    }
 }

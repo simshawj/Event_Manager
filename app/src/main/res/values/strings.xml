@@ -13,6 +13,8 @@
     <string name="invalidEventOkButton">OK</string>
     <string name="eventDateButtonText">Set Event Date</string>
     <string name="eventTimeButtonText">Set Event Time</string>
+    <string name="eventTimePickerMessage">Event Time</string>
+    <string name="eventDatePickerMessage">Event Date</string>
     <string-array name="drawer">
         <item>Today</item>
         <item>Next 7 Days</item>
