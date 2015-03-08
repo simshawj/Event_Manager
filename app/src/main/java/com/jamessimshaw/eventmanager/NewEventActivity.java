@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by James on 3/5/2015.
@@ -26,9 +25,10 @@ public class NewEventActivity extends Activity{
     private Button mCancelButton;
     private int mEventHour;
     private int mEventMinute;
-    private int mDay;
-    private int mMonth;
-    private int mYear;
+    private int mEventDay;
+    private int mEventMonth;
+    private int mEventYear;
+    private EventDataSource mEventDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,11 @@ public class NewEventActivity extends Activity{
 
         mEventHour = -1;
         mEventMinute = -1;
-        mDay = -1;
-        mMonth = -1;
-        mYear = -1;
+        mEventDay = -1;
+        mEventMonth = -1;
+        mEventYear = -1;
+
+        mEventDataSource = new EventDataSource(this);
 
         mTitleEditText = (EditText) findViewById(R.id.eventTitleEditText);
         mLocationEditText = (EditText) findViewById(R.id.eventLocationEditText);
@@ -56,7 +58,7 @@ public class NewEventActivity extends Activity{
             return false;
         if (mLocationEditText.getText().toString().equals(""))
             return false;
-        if (mEventMinute < 0 || mEventHour < 0 || mDay < 0 || mMonth < 0 || mYear < 0)
+        if (mEventMinute < 0 || mEventHour < 0 || mEventDay < 0 || mEventMonth < 0 || mEventYear < 0)
             return false;
         return true;
     }
@@ -71,9 +73,9 @@ public class NewEventActivity extends Activity{
                 new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mDay = dayOfMonth;
-                mMonth = monthOfYear;
-                mYear = year;
+                mEventDay = dayOfMonth;
+                mEventMonth = monthOfYear;
+                mEventYear = year;
             }
         }, curYear, curMonth, curDay);
         datePickerDialog.setMessage(getString(R.string.eventDatePickerMessage));
@@ -107,8 +109,13 @@ public class NewEventActivity extends Activity{
                 event.setTitle(mTitleEditText.getText().toString());
                 event.setLocation(mLocationEditText.getText().toString());
                 event.setComments(mCommentsEditText.getText().toString());
-
-                
+                String dateString = String.format("%04d", mEventYear) + "-" +
+                        String.format("%02d", mEventMonth) + "-" +
+                        String.format("%02d", mEventDay) + " " +
+                        String.format("%02d", mEventHour) + ":" +
+                        String.format("%02d", mEventMinute);
+                event.setDate(dateString);
+                mEventDataSource.create(event);
 
             }
             else {

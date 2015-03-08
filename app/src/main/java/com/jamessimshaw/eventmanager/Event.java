@@ -1,21 +1,19 @@
 package com.jamessimshaw.eventmanager;
 
-import java.util.Date;
-
 /**
  * Created by james on 3/2/15.
  */
 public class Event {
-    Date mDate;
+    String mDate;
     String mTitle;
     String mComments;
     String mLocation;       //Maybe use a different data type for locations
 
-    public Date getDate() {
+    public String getDate() {
         return mDate;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         mDate = date;
     }
 
