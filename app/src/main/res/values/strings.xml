@@ -9,6 +9,10 @@
     <string name="eventCommentsEditTextHint">Comments</string>
     <string name="eventCancelButtonText">Cancel</string>
     <string name="eventSaveButtonText">Save</string>
+    <string name="improperEventValuesAlertDialogMessage">Please verify that the Title and Location are not empty and the Date and Time are set.</string>
+    <string name="invalidEventOkButton">OK</string>
+    <string name="eventDateButtonText">Set Event Date</string>
+    <string name="eventTimeButtonText">Set Event Time</string>
     <string-array name="drawer">
         <item>Today</item>
         <item>Next 7 Days</item>
