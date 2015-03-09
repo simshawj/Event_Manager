@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.jamessimshaw.eventmanager.adapters.EventAdapter;
 import com.jamessimshaw.eventmanager.models.Event;
 import com.jamessimshaw.eventmanager.datasources.EventDataSource;
 import com.jamessimshaw.eventmanager.R;
@@ -19,8 +23,10 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
     private String[] mDrawerItems;
     private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ListView mDrawerList;
     private ListView mEventsListView;
+    private int mDateWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +38,29 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.eventDrawer);
         mEventsListView = (ListView) findViewById(R.id.eventListView);
 
+        mDateWindow = EventDataSource.ALL_FUTURE;
+
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, mDrawerItems));
-        //mDrawerList.setOnClickListener(null);
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawerOpened, R.string.drawerClosed) {
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
         displayEvents();
     }
@@ -70,9 +96,37 @@ public class MainActivity extends Activity {
 
     private void displayEvents() {
         EventDataSource eventDataSource = new EventDataSource(this);
-        ArrayList<Event> events = eventDataSource.read(EventDataSource.ALL_FUTURE);
+        ArrayList<Event> events = eventDataSource.read(mDateWindow);
 
-        mEventsListView.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, events));  //TODO: Create custom adapter
+        mEventsListView.setAdapter(new EventAdapter(this, events));
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_new).setVisible(!mDrawerLayout.isDrawerOpen(mDrawerList));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            switch (position) {
+                case 1:
+                    mDateWindow = EventDataSource.TODAY;
+                    break;
+                case 2:
+                    mDateWindow = EventDataSource.SEVEN_DAYS;
+                    break;
+                case 3:
+                    mDateWindow = EventDataSource.THIRTY_DAYS;
+                    break;
+                case 4:
+                    mDateWindow = EventDataSource.ALL_FUTURE;
+                    break;
+            }
+            displayEvents();
+        }
     }
 }
