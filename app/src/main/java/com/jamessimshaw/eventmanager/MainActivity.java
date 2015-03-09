@@ -9,11 +9,14 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends Activity {
     private String[] mDrawerItems;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private ListView mEventsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +26,20 @@ public class MainActivity extends Activity {
         mDrawerItems = getResources().getStringArray(R.array.drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mainActivityView);
         mDrawerList = (ListView) findViewById(R.id.eventDrawer);
+        mEventsListView = (ListView) findViewById(R.id.eventListView);
 
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, mDrawerItems));
         //mDrawerList.setOnClickListener(null);
+
+        displayEvents();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displayEvents();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,5 +64,13 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void displayEvents() {
+        EventDataSource eventDataSource = new EventDataSource(this);
+        ArrayList<Event> events = eventDataSource.read(EventDataSource.ALL_FUTURE);
+
+        mEventsListView.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, events));  //TODO: Create custom adapter
     }
 }

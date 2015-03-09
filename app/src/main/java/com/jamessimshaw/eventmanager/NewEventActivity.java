@@ -105,18 +105,17 @@ public class NewEventActivity extends Activity{
         @Override
         public void onClick(View v) {
             if (isValidInput()) {
-                Event event = new Event();
-                event.setTitle(mTitleEditText.getText().toString());
-                event.setLocation(mLocationEditText.getText().toString());
-                event.setComments(mCommentsEditText.getText().toString());
                 String dateString = String.format("%04d", mEventYear) + "-" +
                         String.format("%02d", mEventMonth) + "-" +
                         String.format("%02d", mEventDay) + " " +
                         String.format("%02d", mEventHour) + ":" +
                         String.format("%02d", mEventMinute);
-                event.setDate(dateString);
+                Event event = new Event(mTitleEditText.getText().toString(),
+                        dateString,
+                        mLocationEditText.getText().toString(),
+                        mCommentsEditText.getText().toString());
                 mEventDataSource.create(event);
-
+                NewEventActivity.this.finish();
             }
             else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(NewEventActivity.this);
