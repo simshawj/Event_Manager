@@ -1,4 +1,4 @@
-package com.jamessimshaw.eventmanager;
+package com.jamessimshaw.eventmanager.datasources;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-import java.lang.reflect.Array;
+import com.jamessimshaw.eventmanager.models.Event;
+
 import java.util.ArrayList;
 
 /**

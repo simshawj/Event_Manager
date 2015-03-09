@@ -1,4 +1,4 @@
-package com.jamessimshaw.eventmanager;
+package com.jamessimshaw.eventmanager.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import com.jamessimshaw.eventmanager.models.Event;
+import com.jamessimshaw.eventmanager.datasources.EventDataSource;
+import com.jamessimshaw.eventmanager.R;
 
 import java.util.Calendar;
 

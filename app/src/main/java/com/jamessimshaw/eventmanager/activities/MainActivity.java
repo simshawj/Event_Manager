@@ -1,4 +1,4 @@
-package com.jamessimshaw.eventmanager;
+package com.jamessimshaw.eventmanager.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.jamessimshaw.eventmanager.models.Event;
+import com.jamessimshaw.eventmanager.datasources.EventDataSource;
+import com.jamessimshaw.eventmanager.R;
 
 import java.util.ArrayList;
 
@@ -55,11 +59,9 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_new) {
             Intent intent = new Intent(this, NewEventActivity.class);
             startActivity(intent);
-
             return true;
         }
 

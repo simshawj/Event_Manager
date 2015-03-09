@@ -1,4 +1,4 @@
-package com.jamessimshaw.eventmanager;
+package com.jamessimshaw.eventmanager.datasources;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

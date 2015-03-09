@@ -1,4 +1,4 @@
-package com.jamessimshaw.eventmanager;
+package com.jamessimshaw.eventmanager.models;
 
 /**
  * Created by james on 3/2/15.
