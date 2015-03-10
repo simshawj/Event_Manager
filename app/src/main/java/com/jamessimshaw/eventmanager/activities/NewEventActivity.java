@@ -4,24 +4,32 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.jamessimshaw.eventmanager.models.Event;
-import com.jamessimshaw.eventmanager.datasources.EventDataSource;
 import com.jamessimshaw.eventmanager.R;
+import com.jamessimshaw.eventmanager.datasources.EventDataSource;
+import com.jamessimshaw.eventmanager.models.Event;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by James on 3/5/2015.
  */
-public class NewEventActivity extends Activity{
+public class NewEventActivity extends Activity {
+    private static final String TAG = NewEventActivity.class.getClass().getSimpleName();
     private EditText mTitleEditText;
     private EditText mLocationEditText;
     private EditText mCommentsEditText;
@@ -32,18 +40,13 @@ public class NewEventActivity extends Activity{
     private int mEventDay;
     private int mEventMonth;
     private int mEventYear;
+    private Event mEvent;
     private EventDataSource mEventDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-
-        mEventHour = -1;
-        mEventMinute = -1;
-        mEventDay = -1;
-        mEventMonth = -1;
-        mEventYear = -1;
 
         mEventDataSource = new EventDataSource(this);
 
@@ -53,8 +56,49 @@ public class NewEventActivity extends Activity{
         mSaveButton = (Button) findViewById(R.id.eventSaveButton);
         mCancelButton = (Button) findViewById(R.id.eventCancelButton);
 
+        setDefaultValues();
+
         mSaveButton.setOnClickListener(mSaveClickListener);
         mCancelButton.setOnClickListener(mCancelClickListener);
+    }
+
+    private void setDefaultValues() {
+        Intent intent = getIntent();
+
+        if (intent.hasExtra("event")) {
+            mEvent = intent.getParcelableExtra("event");
+            SimpleDateFormat dateFormat = new SimpleDateFormat(this.getString(R.string.dateFormatString));
+            try {
+                Date date = dateFormat.parse(mEvent.getDate());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                mEventHour = calendar.get(Calendar.HOUR_OF_DAY);
+                mEventMinute = calendar.get(Calendar.MINUTE);
+                mEventDay = calendar.get(Calendar.DAY_OF_MONTH);
+                mEventMonth = calendar.get(Calendar.MONTH);
+                mEventYear = calendar.get(Calendar.YEAR);
+                mTitleEditText.setText(mEvent.getTitle(), TextView.BufferType.EDITABLE);
+                mLocationEditText.setText(mEvent.getLocation(), TextView.BufferType.EDITABLE);
+                mCommentsEditText.setText(mEvent.getComments(), TextView.BufferType.EDITABLE);
+            }
+            catch (ParseException e) {
+                Log.d(TAG, getString(R.string.exceptionCaughtString), e);
+                Toast.makeText(this, getString(R.string.editEventLoadErrorToastMessage), Toast.LENGTH_LONG).show();
+                setDefaults();
+            }
+        }
+        else {
+            setDefaults();
+        }
+    }
+
+    private void setDefaults() {
+        mEvent = null;
+        mEventHour = -1;
+        mEventMinute = -1;
+        mEventDay = -1;
+        mEventMonth = -1;
+        mEventYear = -1;
     }
 
     private boolean isValidInput() {
@@ -68,30 +112,50 @@ public class NewEventActivity extends Activity{
     }
 
     public void showDatePicker(View view) {
-        Calendar calendar = Calendar.getInstance();
-        int curYear = calendar.get(Calendar.YEAR);
-        int curMonth = calendar.get(Calendar.MONTH);
-        int curDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int year;
+        int month;
+        int day;
+
+        if (mEventYear != -1 && mEventMonth != -1 && mEventDay != -1) {
+            year = mEventYear;
+            month = mEventMonth;
+            day = mEventDay;
+        }
+        else {
+            Calendar calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mEventDay = dayOfMonth;
-                mEventMonth = monthOfYear + 1;
+                mEventMonth = monthOfYear;
                 mEventYear = year;
             }
-        }, curYear, curMonth, curDay);
+        }, year, month, day);
         datePickerDialog.setMessage(getString(R.string.eventDatePickerMessage));
         datePickerDialog.show();
 
     }
 
     public void showTimePicker(View view) {
-        final Calendar calendar = Calendar.getInstance();
 
-        int curHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int curMinute = calendar.get(Calendar.MINUTE);
+        int hour;
+        int minute;
+
+        if (mEventHour != -1 && mEventMinute != -1) {
+            hour = mEventHour;
+            minute = mEventMinute;
+        }
+        else {
+            Calendar calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            minute = calendar.get(Calendar.MINUTE);
+        }
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
@@ -100,7 +164,7 @@ public class NewEventActivity extends Activity{
                 mEventHour = hourOfDay;
                 mEventMinute = minute;
             }
-        }, curHour, curMinute, DateFormat.is24HourFormat(this));
+        }, hour, minute, DateFormat.is24HourFormat(this));
         timePickerDialog.setMessage(getString(R.string.eventTimePickerMessage));
         timePickerDialog.show();
     }
@@ -109,16 +173,26 @@ public class NewEventActivity extends Activity{
         @Override
         public void onClick(View v) {
             if (isValidInput()) {
-                String dateString = String.format("%04d", mEventYear) + "-" +
-                        String.format("%02d", mEventMonth) + "-" +
-                        String.format("%02d", mEventDay) + " " +
-                        String.format("%02d", mEventHour) + ":" +
-                        String.format("%02d", mEventMinute);
-                Event event = new Event(mTitleEditText.getText().toString(),
-                        dateString,
-                        mLocationEditText.getText().toString(),
-                        mCommentsEditText.getText().toString());
-                mEventDataSource.create(event);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(mEventYear, mEventMonth, mEventDay, mEventHour, mEventMinute);
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        NewEventActivity.this.getString(R.string.dateFormatString));
+                String dateString = dateFormat.format(calendar.getTime());
+                if (mEvent == null) {
+                    mEvent = new Event(mTitleEditText.getText().toString(),
+                            dateString,
+                            mLocationEditText.getText().toString(),
+                            mCommentsEditText.getText().toString());
+
+                    mEventDataSource.create(mEvent);
+                }
+                else {
+                    mEvent.setTitle(mTitleEditText.getText().toString());
+                    mEvent.setDate(dateString);
+                    mEvent.setLocation(mLocationEditText.getText().toString());
+                    mEvent.setComments(mCommentsEditText.getText().toString());
+                    mEventDataSource.update(mEvent);
+                }
                 NewEventActivity.this.finish();
             }
             else {

@@ -21,9 +21,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
-    private String[] mDrawerItems;
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ListView mDrawerList;
     private ListView mEventsListView;
     private int mDateWindow;
@@ -33,7 +31,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerItems = getResources().getStringArray(R.array.drawer);
+        String[] drawerItems = getResources().getStringArray(R.array.drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mainActivityView);
         mDrawerList = (ListView) findViewById(R.id.eventDrawer);
         mEventsListView = (ListView) findViewById(R.id.eventListView);
@@ -41,10 +39,10 @@ public class MainActivity extends Activity {
         mDateWindow = EventDataSource.TODAY;
 
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, mDrawerItems));
+                android.R.layout.simple_list_item_1, drawerItems));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.drawerOpened, R.string.drawerClosed) {
 
             @Override
@@ -60,7 +58,7 @@ public class MainActivity extends Activity {
             }
         };
 
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         displayEvents();
     }
@@ -96,11 +94,19 @@ public class MainActivity extends Activity {
 
     private void displayEvents() {
         EventDataSource eventDataSource = new EventDataSource(this);
-        ArrayList<Event> events = eventDataSource.read(mDateWindow);
-
+        final ArrayList<Event> events = eventDataSource.read(mDateWindow);
 
         mEventsListView.setAdapter(new EventAdapter(this, events));
         mEventsListView.setEmptyView(findViewById(R.id.emptyView));
+
+        mEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, NewEventActivity.class);
+                intent.putExtra("event", events.get(position));
+                startActivity(intent);
+            }
+        });
 
     }
 

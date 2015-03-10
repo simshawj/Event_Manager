@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
+import com.jamessimshaw.eventmanager.R;
 import com.jamessimshaw.eventmanager.models.Event;
 
 import java.text.SimpleDateFormat;
@@ -17,16 +18,17 @@ import java.util.GregorianCalendar;
  * Created by james on 3/5/15.
  */
 public class EventDataSource {
-    private EventLocalDBHelper mEventLocalDBHelper;
-
     public static final String TAG = "EventLocalDBHelper";
-
     public static final int TODAY = 1;
     public static final int SEVEN_DAYS = 2;
     public static final int THIRTY_DAYS = 3;
     public static final int ALL_FUTURE = 4;
 
+    private EventLocalDBHelper mEventLocalDBHelper;
+    private Context mContext;
+
     public EventDataSource(Context context) {
+        mContext = context;
         mEventLocalDBHelper = new EventLocalDBHelper(context);
     }
 
@@ -54,12 +56,31 @@ public class EventDataSource {
         close(database);
     }
 
+    public void update(Event event) {
+        if (event.getId() < 0)
+            return;
+
+        SQLiteDatabase database = open();
+        database.beginTransaction();
+
+        ContentValues eventValues = new ContentValues();
+        eventValues.put(EventLocalDBHelper.COLUMN_TITLE, event.getTitle());
+        eventValues.put(EventLocalDBHelper.COLUMN_DATE, event.getDate());
+        eventValues.put(EventLocalDBHelper.COLUMN_LOCATION, event.getLocation());
+        eventValues.put(EventLocalDBHelper.COLUMN_COMMENTS, event.getComments());
+        database.update(EventLocalDBHelper.TABLE_EVENTS, eventValues, BaseColumns._ID + "=" +
+                Long.toString(event.getId()), null);
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        close(database);
+    }
+
     public ArrayList<Event> read(int modifier) {
         SQLiteDatabase database = open();
         String where = EventLocalDBHelper.COLUMN_DATE + " between ? and ?";
         String[] whereArgs = new String[2];
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(mContext.getString(R.string.dateFormatString));
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);

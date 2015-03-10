@@ -1,9 +1,9 @@
 package com.jamessimshaw.eventmanager.models;
 
-/**
- * Created by james on 3/2/15.
- */
-public class Event {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Event implements Parcelable {
     long mId;
     String mDate;
     String mTitle;
@@ -19,6 +19,7 @@ public class Event {
     }
 
     public Event(String title, String date, String location, String comments) {
+        mId = -1;
         mDate = date;
         mTitle = title;
         mComments = comments;
@@ -65,5 +66,38 @@ public class Event {
         mLocation = location;
     }
 
+    private Event(Parcel in) {
+        mId = in.readLong();
+        mTitle = in.readString();
+        mLocation = in.readString();
+        mDate = in.readString();
+        mComments = in.readString();
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(mId);
+        dest.writeString(mTitle);
+        dest.writeString(mLocation);
+        dest.writeString(mDate);
+        dest.writeString(mComments);
+    }
+
+    public static final Creator CREATOR = new Creator() {
+
+        @Override
+        public Event createFromParcel(Parcel source) {
+            return new Event(source);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 }

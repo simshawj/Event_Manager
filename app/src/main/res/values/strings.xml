@@ -18,6 +18,9 @@
     <string name="drawerOpened">Drawer Opened</string>
     <string name="drawerClosed">Drawer Closed</string>
     <string name="emptyViewMessage">No events found in this timeframe</string>
+    <string name="dateFormatString">yyyy-MM-dd HH:mm</string>
+    <string name="editEventLoadErrorToastMessage">Error loading event to edit</string>
+    <string name="exceptionCaughtString">"Exception caught: "</string>
     <string-array name="drawer">
         <item>Today</item>
         <item>Next 7 Days</item>
