@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,16 +27,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by James on 3/5/2015.
- */
-public class NewEventActivity extends Activity {
-    private static final String TAG = NewEventActivity.class.getClass().getSimpleName();
+public class ModifyEventActivity extends Activity {
+    private static final String TAG = ModifyEventActivity.class.getClass().getSimpleName();
+
     private EditText mTitleEditText;
     private EditText mLocationEditText;
     private EditText mCommentsEditText;
-    private Button mSaveButton;
-    private Button mCancelButton;
     private int mEventHour;
     private int mEventMinute;
     private int mEventDay;
@@ -46,20 +44,20 @@ public class NewEventActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_event);
+        setContentView(R.layout.activity_modify_event);
 
         mEventDataSource = new EventDataSource(this);
 
         mTitleEditText = (EditText) findViewById(R.id.eventTitleEditText);
         mLocationEditText = (EditText) findViewById(R.id.eventLocationEditText);
         mCommentsEditText = (EditText) findViewById(R.id.eventCommentsEditText);
-        mSaveButton = (Button) findViewById(R.id.eventSaveButton);
-        mCancelButton = (Button) findViewById(R.id.eventCancelButton);
+        Button saveButton = (Button) findViewById(R.id.eventSaveButton);
+        Button cancelButton = (Button) findViewById(R.id.eventCancelButton);
 
         setDefaultValues();
 
-        mSaveButton.setOnClickListener(mSaveClickListener);
-        mCancelButton.setOnClickListener(mCancelClickListener);
+        saveButton.setOnClickListener(mSaveClickListener);
+        cancelButton.setOnClickListener(mCancelClickListener);
     }
 
     private void setDefaultValues() {
@@ -169,6 +167,30 @@ public class NewEventActivity extends Activity {
         timePickerDialog.show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        if (mEvent != null)
+            getMenuInflater().inflate(R.menu.menu_modify, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_delete) {
+            mEventDataSource.delete(mEvent);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private View.OnClickListener mSaveClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -176,7 +198,7 @@ public class NewEventActivity extends Activity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(mEventYear, mEventMonth, mEventDay, mEventHour, mEventMinute);
                 SimpleDateFormat dateFormat = new SimpleDateFormat(
-                        NewEventActivity.this.getString(R.string.dateFormatString));
+                        ModifyEventActivity.this.getString(R.string.dateFormatString));
                 String dateString = dateFormat.format(calendar.getTime());
                 if (mEvent == null) {
                     mEvent = new Event(mTitleEditText.getText().toString(),
@@ -193,10 +215,10 @@ public class NewEventActivity extends Activity {
                     mEvent.setComments(mCommentsEditText.getText().toString());
                     mEventDataSource.update(mEvent);
                 }
-                NewEventActivity.this.finish();
+                ModifyEventActivity.this.finish();
             }
             else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(NewEventActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ModifyEventActivity.this);
                 builder.setMessage(getString(R.string.improperEventValuesAlertDialogMessage));
                 builder.setPositiveButton(getString(R.string.invalidEventOkButton), null);
                 builder.create().show();

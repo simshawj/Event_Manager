@@ -4,11 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Event implements Parcelable {
-    long mId;
-    String mDate;
-    String mTitle;
-    String mComments;
-    String mLocation;
+    private long mId;
+    private String mDate;
+    private String mTitle;
+    private String mComments;
+    private String mLocation;
 
     public Event(long id, String title, String date, String location, String comments) {
         mLocation = location;

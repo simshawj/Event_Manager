@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-/**
- * Created by james on 3/4/15.
- */
 public class EventLocalDBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "events.db";

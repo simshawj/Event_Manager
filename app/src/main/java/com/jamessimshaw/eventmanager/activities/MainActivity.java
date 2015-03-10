@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         if (id == R.id.action_new) {
-            Intent intent = new Intent(this, NewEventActivity.class);
+            Intent intent = new Intent(this, ModifyEventActivity.class);
             startActivity(intent);
             return true;
         }
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
         mEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, NewEventActivity.class);
+                Intent intent = new Intent(MainActivity.this, ModifyEventActivity.class);
                 intent.putExtra("event", events.get(position));
                 startActivity(intent);
             }
@@ -133,8 +133,9 @@ public class MainActivity extends Activity {
                 case 3:
                     mDateWindow = EventDataSource.ALL_FUTURE;
                     break;
+                case 4:
                 default:
-                    mDateWindow = EventDataSource.ALL_FUTURE;
+                    mDateWindow = EventDataSource.ALL_EVENTS;
             }
             displayEvents();
         }

@@ -12,12 +12,9 @@ import com.jamessimshaw.eventmanager.models.Event;
 
 import java.util.ArrayList;
 
-/**
- * Created by james on 3/9/15.
- */
 public class EventAdapter extends BaseAdapter {
-    ArrayList<Event> mEvents;
-    Context mContext;
+    private ArrayList<Event> mEvents;
+    private Context mContext;
 
     public EventAdapter (Context context, ArrayList<Event> events) {
         super();

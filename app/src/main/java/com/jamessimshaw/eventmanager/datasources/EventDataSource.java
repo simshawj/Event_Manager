@@ -14,15 +14,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-/**
- * Created by james on 3/5/15.
- */
 public class EventDataSource {
-    public static final String TAG = "EventLocalDBHelper";
     public static final int TODAY = 1;
     public static final int SEVEN_DAYS = 2;
     public static final int THIRTY_DAYS = 3;
     public static final int ALL_FUTURE = 4;
+    public static final int ALL_EVENTS = 5;
 
     private EventLocalDBHelper mEventLocalDBHelper;
     private Context mContext;
@@ -96,17 +93,18 @@ public class EventDataSource {
                 break;
             case SEVEN_DAYS:
                 calendar.add(Calendar.DAY_OF_MONTH, 7);
-                whereArgs[1] = dateFormat.format(calendar.getTime());;
+                whereArgs[1] = dateFormat.format(calendar.getTime());
                 break;
             case THIRTY_DAYS:
                 calendar.add(Calendar.DAY_OF_MONTH, 30);
-                whereArgs[1] = dateFormat.format(calendar.getTime());;
+                whereArgs[1] = dateFormat.format(calendar.getTime());
                 break;
             case ALL_FUTURE:
                 where = EventLocalDBHelper.COLUMN_DATE + " >= ?";
                 whereArgs = new String[1];
                 whereArgs[0] = today;
                 break;
+            case ALL_EVENTS:
             default:
                 where = null;
                 whereArgs = null;
@@ -141,6 +139,13 @@ public class EventDataSource {
         cursor.close();
         close(database);
         return events;
+    }
+
+    public void delete(Event event) {
+        SQLiteDatabase database = open();
+        database.delete(EventLocalDBHelper.TABLE_EVENTS, BaseColumns._ID + "=" +
+                Long.toString(event.getId()), null);
+        close(database);
     }
 
     private int getIntFromColumnName(Cursor cursor, String columnName) {

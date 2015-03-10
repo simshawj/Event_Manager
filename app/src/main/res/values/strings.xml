@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">Event Manager</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="menu_newEvent">New Event</string>
     <string name="eventTitleEditTextHint">Event Title</string>
     <string name="eventLocationEditTextHint">Event Location</string>
-    <string name="eventDateEditTextHint">Event Date</string>
     <string name="eventCommentsEditTextHint">Comments</string>
     <string name="eventCancelButtonText">Cancel</string>
     <string name="eventSaveButtonText">Save</string>
@@ -21,10 +18,12 @@
     <string name="dateFormatString">yyyy-MM-dd HH:mm</string>
     <string name="editEventLoadErrorToastMessage">Error loading event to edit</string>
     <string name="exceptionCaughtString">"Exception caught: "</string>
+    <string name="deleteEventMenuItem">Delete Event</string>
     <string-array name="drawer">
         <item>Today</item>
         <item>Next 7 Days</item>
         <item>Next 30 Days</item>
         <item>All Future Events</item>
+        <item>All Events</item>
     </string-array>
 </resources>
