@@ -78,7 +78,7 @@ public class NewEventActivity extends Activity{
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mEventDay = dayOfMonth;
-                mEventMonth = monthOfYear;
+                mEventMonth = monthOfYear + 1;
                 mEventYear = year;
             }
         }, curYear, curMonth, curDay);

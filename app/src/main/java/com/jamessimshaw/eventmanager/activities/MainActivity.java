@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.eventDrawer);
         mEventsListView = (ListView) findViewById(R.id.eventListView);
 
-        mDateWindow = EventDataSource.ALL_FUTURE;
+        mDateWindow = EventDataSource.TODAY;
 
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, mDrawerItems));
@@ -98,7 +98,9 @@ public class MainActivity extends Activity {
         EventDataSource eventDataSource = new EventDataSource(this);
         ArrayList<Event> events = eventDataSource.read(mDateWindow);
 
+
         mEventsListView.setAdapter(new EventAdapter(this, events));
+        mEventsListView.setEmptyView(findViewById(R.id.emptyView));
 
     }
 
@@ -113,18 +115,20 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             switch (position) {
-                case 1:
+                case 0:
                     mDateWindow = EventDataSource.TODAY;
                     break;
-                case 2:
+                case 1:
                     mDateWindow = EventDataSource.SEVEN_DAYS;
                     break;
-                case 3:
+                case 2:
                     mDateWindow = EventDataSource.THIRTY_DAYS;
                     break;
-                case 4:
+                case 3:
                     mDateWindow = EventDataSource.ALL_FUTURE;
                     break;
+                default:
+                    mDateWindow = EventDataSource.ALL_FUTURE;
             }
             displayEvents();
         }

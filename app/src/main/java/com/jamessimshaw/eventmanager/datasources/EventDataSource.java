@@ -8,13 +8,18 @@ import android.provider.BaseColumns;
 
 import com.jamessimshaw.eventmanager.models.Event;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by james on 3/5/15.
  */
 public class EventDataSource {
     private EventLocalDBHelper mEventLocalDBHelper;
+
+    public static final String TAG = "EventLocalDBHelper";
 
     public static final int TODAY = 1;
     public static final int SEVEN_DAYS = 2;
@@ -51,20 +56,42 @@ public class EventDataSource {
 
     public ArrayList<Event> read(int modifier) {
         SQLiteDatabase database = open();
-        String endDay;
+        String where = EventLocalDBHelper.COLUMN_DATE + " between ? and ?";
+        String[] whereArgs = new String[2];
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        String today = dateFormat.format(calendar.getTime());
+        whereArgs[0] = today;
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
 
         switch(modifier) {
             case TODAY:
+                whereArgs[1] = dateFormat.format(calendar.getTime());
                 break;
             case SEVEN_DAYS:
+                calendar.add(Calendar.DAY_OF_MONTH, 7);
+                whereArgs[1] = dateFormat.format(calendar.getTime());;
                 break;
             case THIRTY_DAYS:
+                calendar.add(Calendar.DAY_OF_MONTH, 30);
+                whereArgs[1] = dateFormat.format(calendar.getTime());;
                 break;
             case ALL_FUTURE:
+                where = EventLocalDBHelper.COLUMN_DATE + " >= ?";
+                whereArgs = new String[1];
+                whereArgs[0] = today;
+                break;
+            default:
+                where = null;
+                whereArgs = null;
                 break;
         }
 
-        String where = "? BETWEEN datetime(Today) AND datetime(?)";
 
         Cursor cursor = database.query(EventLocalDBHelper.TABLE_EVENTS,
                 new String[] {BaseColumns._ID,
@@ -72,8 +99,8 @@ public class EventDataSource {
                         EventLocalDBHelper.COLUMN_DATE,
                         EventLocalDBHelper.COLUMN_LOCATION,
                         EventLocalDBHelper.COLUMN_COMMENTS},
-                null,
-                null,
+                where,
+                whereArgs,
                 null,
                 null,
                 EventLocalDBHelper.COLUMN_DATE);

@@ -17,6 +17,7 @@
     <string name="eventDatePickerMessage">Event Date</string>
     <string name="drawerOpened">Drawer Opened</string>
     <string name="drawerClosed">Drawer Closed</string>
+    <string name="emptyViewMessage">No events found in this timeframe</string>
     <string-array name="drawer">
         <item>Today</item>
         <item>Next 7 Days</item>
